@@ -1,5 +1,5 @@
 var app = angular.module('myApplication', []);
- 
+ //komentarz
 app.controller('myController', function($scope) {
   $scope.myText = "";
   $scope.btnText="About";
