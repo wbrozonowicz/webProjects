@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="myApplication">
+<head>
+	<meta charset="UTF-8">
+	<title>Projects with AngularJS</title>
+	<link rel="stylesheet" type="text/css" href="styleMySimpleCalculator.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+	<script src="controllerMySimpleCalculator.js"></script>
+</head>
+<body ng-controller="myController">
+	
+	<div id ="calc"><h2>Simple calculator</h2>
+		<button ng-click="showTip()" ng-model = "tipButton">{{btnText}}</button>
+		<h5>{{myText}}</h5>
+
+		
+<div class="mainScreen">{{screenText}}</div>
+<div class ="separator"> </div>
+<div>
+	<button class="btn" ng-click="NumberOnScreen(0)" ng-model = "calcButton">0</button>
+	<button class="btn" ng-click="NumberOnScreen(1)" ng-model = "calcButton">1</button>
+	<button class="btn" ng-click="NumberOnScreen(2)" ng-model = "calcButton">2</button>
+	<button class="btn" ng-click="NumberOnScreen(3)" ng-model = "calcButton">3</button>
+	<button class="btn" ng-click="NumberOnScreen(4)" ng-model = "calcButton">4</button>
+</div>
+<div>
+	<button class="btn" ng-click="NumberOnScreen(5)" ng-model = "calcButton">5</button>
+	<button class="btn" ng-click="NumberOnScreen(6)" ng-model = "calcButton">6</button>
+	<button class="btn" ng-click="NumberOnScreen(7)" ng-model = "calcButton">7</button>
+	<button class="btn" ng-click="NumberOnScreen(8)" ng-model = "calcButton">8</button>
+	<button class="btn" ng-click="NumberOnScreen(9)" ng-model = "calcButton">9</button>
+</div>
+<div class ="separator"> </div>
+<div>
+<div>
+		<button class="btnFunc" ng-click="doOperation('+')" ng-model = "calcButton">+</button>
+		<button class="btnFunc" ng-click="doOperation('-')" ng-model = "calcButton">-</button>
+		<button class="btnFunc" ng-click="doOperation('*')" ng-model = "calcButton">*</button>
+		<button class="btnFunc" ng-click="doOperation('/')" ng-model = "calcButton">/</button>
+		<button class="btnFunc" ng-click="doCount()" ng-model = "calcButton">=</button>
+	</div>
+</div>
+<div>
+	<div>
+			<button class="btnFunc" ng-click="dot()" ng-model = "calcButton">.</button>
+			<button class="btnFunc" ng-click="doC('C')" ng-model = "calcButton">C</button>
+			<button class="btnFunc" ng-click="doOperation(' ')" ng-model = "calcButton">a</button>
+			<button class="btnFunc" ng-click="doOperation(' ')" ng-model = "calcButton">a</button>
+			<button class="btnFunc" ng-click="doOperation(' ')" ng-model = "calcButton">a</button>
+		</div>
+	</div>	 
+	
+</body>
+</html>
