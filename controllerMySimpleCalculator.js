@@ -1,5 +1,5 @@
 var app = angular.module('myApplication', []);
- //komentarz
+ 
 
 app.controller('myController', function($scope) {
   $scope.myText = "";
@@ -8,7 +8,6 @@ app.controller('myController', function($scope) {
   var counted = false;
   var partValue="";
   var valueA;
-  var testYY;
   var valueB;
   var result=0;
   var operation="??";
