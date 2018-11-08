@@ -8,8 +8,8 @@
 	<script src="controllerMySimpleCalculator.js"></script>
 </head>
 <body ng-controller="myController">
-	
-	<div id ="calc"><h2>Simple calculator</h2>
+
+	<div id ="calc"><h2><img src="img\tt.png" alt="calculator"></h2>
 		<button ng-click="showTip()" ng-model = "tipButton">{{btnText}}</button>
 		<h5>{{myText}}</h5>
 
@@ -33,22 +33,16 @@
 <div class ="separator"> </div>
 <div>
 <div>
+		<button class="btnFunc" ng-click="doC('C')" ng-model = "calcButton">C</button>
 		<button class="btnFunc" ng-click="doOperation('+')" ng-model = "calcButton">+</button>
 		<button class="btnFunc" ng-click="doOperation('-')" ng-model = "calcButton">-</button>
 		<button class="btnFunc" ng-click="doOperation('*')" ng-model = "calcButton">*</button>
 		<button class="btnFunc" ng-click="doOperation('/')" ng-model = "calcButton">/</button>
+		<button class="btnFunc" ng-click="dot()" ng-model = "calcButton">.</button>
 		<button class="btnFunc" ng-click="doCount()" ng-model = "calcButton">=</button>
 	</div>
 </div>
-<div>
-	<div>
-			<button class="btnFunc" ng-click="dot()" ng-model = "calcButton">.</button>
-			<button class="btnFunc" ng-click="doC('C')" ng-model = "calcButton">C</button>
-			<button class="btnFunc" ng-click="doOperation(' ')" ng-model = "calcButton">a</button>
-			<button class="btnFunc" ng-click="doOperation(' ')" ng-model = "calcButton">a</button>
-			<button class="btnFunc" ng-click="doOperation(' ')" ng-model = "calcButton">a</button>
-		</div>
-	</div>	 
-	
+ 
+
 </body>
 </html>

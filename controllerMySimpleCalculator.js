@@ -11,31 +11,45 @@ app.controller('myController', function($scope) {
   var valueB;
   var result=0;
   var operation="??";
-  var dotPossible = false;
+  var dotPossible = true;
   var dotInside = false;
-  $scope.NumberOnScreen = function(inNo){
+ 
+  $scope.doC = function(){
     var isText = $scope.screenText;
-    if (counted==true){
-valueA=0;
-valueB=0;
-result=0;
-partValue=0;
-operation="??";
-counted=false;
-isText="";
+    valueA=0;
+    valueB=0;
+    result=0;
+    partValue=0;
+    operation="??";
+    counted=false;
+    isText="";
+    $scope.screenText=0;
+    dotPossible=true;
+    dotInside = false;
+  }
 
+  $scope.NumberOnScreen = function(inNo){ 
+    if (counted==true){
+ $scope.doC();
     }
+    var isText = $scope.screenText;
     if (isText=='0'){
       isText="";
     }
+  
     $scope.screenText=isText+inNo;
     partValue=partValue+inNo;
     dotPossible=true;
       }
     
       $scope.doOperation = function(sign){
-        if (operation=="??"){ 
         var isText = $scope.screenText;
+
+        if (counted==true){
+          isText = valueA;
+          counted=false;
+        }
+        if (operation=="??"){ 
         valueA=parseFloat(isText);
         partValue="";
         $scope.screenText=isText+sign;
@@ -48,9 +62,13 @@ isText="";
           }
 
           $scope.doCount = function(){
+            var resultToShow;
             if (counted==false){
             var isText = $scope.screenText;
             valueB = parseFloat(partValue);
+            if ((operation=="??") || (valueB==0)){
+              alert("Choose operation first");
+            } else {
             if (operation=='+'){
               result = valueA+valueB;
             }
@@ -63,12 +81,18 @@ isText="";
             if (operation=='/'){
               result = valueA/valueB;
             }
-            $scope.screenText = isText+'='+result;
+            if (((result*10)%10)>0){
+              resultToShow = result.toFixed(3);
+            } else {
+              resultToShow = result;
+            }
+            $scope.screenText = isText+'='+resultToShow;
             dotPossible=false;
             dotInside=false;
             counted=true;
             operation="??";
             valueA=result;
+          }
           }
           }
 
@@ -82,6 +106,7 @@ isText="";
       }
     }
 
+    
   
 
   $scope.showTip = function () {
