@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+	<meta charset="UTF-8">
+	<title>Projects with AngularJS</title>
+	<link rel="stylesheet" type="text/css" href="styleMySimpleCalculator.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+</head>
+<body ng-controller="myController"> 
+<div>{{myText}}</div>
+<div id ="numerek" ng-click="showLog()" width=400px>{{myNumber}}</div>
+<button class="btn" ng-click="notSuper()" ng-model = "calcButton">0</button>
+<div id ="lista" ng-click="showLog()" width=400px>{{a1}}</div>
+<table  cellpadding="10">
+        <tr ng-repeat="(klucz, wartosc) in osoba">
+           <td>{{klucz}}</td>
+           <td>{{wartosc}}</td>
+        </tr>
+     </table>
+
+
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myController', function($scope) {  
+        $scope.myText = "World is great";
+        $scope.myText = $scope.myText? "World is great":"World sucks";
+        $scope.a1 = "super";
+        $scope.a2 = "super";
+        $scope.a3 = "super";
+        $scope.a4 = "super";
+$scope.myNumber = "tttt9";
+
+$scope.showLog = function(nor)
+            {
+                $scope.myNumber=999;
+                console.log("Wojtunio");
+            }
+$scope.notSuper = function(){
+    var listaX = [];
+    for (var i=0; i< 9; i++){
+        listaX[i]=i;
+    }
+    var i=0;
+    var suma;
+        suma = 0;
+    angular.forEach(listaX,function(value,key){
+        suma = suma+listaX;
+        $scope.a1=suma;
+       
+    })
+}
+
+ $scope.osoba = {
+         imie: "Karol",
+         nazwisko: "Trybulec",
+         kraj: "Polska",
+         plec: "mężczyzna"
+      };
+
+    });
+    </script>
+</body>
+</html>
