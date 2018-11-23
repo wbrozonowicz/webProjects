@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Szachownica</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <style>
+            
+            /* opis */  
+            
+            #szachy {
+                width: 600px;
+                border: 1px solid burlywood;
+                position: relative;
+            }
+            
+            #szachy .wiersz
+            {
+                height: 70px;
+            }
+            
+            #szachy .wiersz > div
+            {
+                float: left;
+                height: 70px;
+                width:560px;
+            }
+            
+            #szachy .wiersz > div:nth-child(even) > div 
+            {
+                float: left;
+                height: 70px;
+                width:70px;
+            }
+            
+            #szachy .wiersz > div:nth-child(odd)
+            {
+                float: left;
+                height: 70px;
+                width:20px;
+                text-align: center;
+            }
+            
+            #szachy .wiersz:nth-child(odd) > div > div:nth-child(odd)
+            {
+                background-color: bisque;
+            }
+            
+            #szachy .wiersz:nth-child(even) > div > div:nth-child(even)
+            {
+                background-color: bisque;
+            }
+            
+            #szachy .litery {height: 17px;}
+            #szachy .litery div 
+            {
+                float: left;
+                width: 70px;
+                text-align: center;
+                height: 17px;
+                
+            }
+            
+            #szachy .pionki div {
+                position: absolute;
+                width: 41px;
+                height: 65px;
+                
+                top: 18px;
+                left: 22px;
+                background-image: url('img/pionki.png');
+                background-repeat: no-repeat;
+                background-size: 216px 133px;
+                transition: all 3s;
+            }
+            
+            #szachy .pionki div.pionek
+            {
+                background-position: -175px 0px;
+            }
+            
+            #szachy .pionki div.czarny
+            {
+                background-position-y:-63px;
+            }
+            
+            
+            #szachy .pionki div.A
+            {
+                left:33px;
+            }
+            #szachy .pionki div.B
+            {
+                left:100px;
+            }
+            #szachy .pionki div.C
+            {
+                left:170px;
+            }
+            #szachy .pionki div.D
+            {
+                left:240px;
+            }
+            #szachy .pionki div.E
+            {
+                left:310px;
+            }
+            #szachy .pionki div.F
+            {
+                left:380px;
+            }
+            #szachy .pionki div.G
+            {
+                left:445px;
+            }
+            #szachy .pionki div.H
+            {
+                left:513px;
+            }
+            #szachy .pionki div.n1
+            {
+                top:10px;
+            }
+            #szachy .pionki div.n2
+            {
+                top:90px;
+            }
+            #szachy .pionki div.n3
+            {
+                top:160px;
+            }
+            #szachy .pionki div.n4
+            {
+                top:230px;
+            }
+            #szachy .pionki div.n5
+            {
+                top:300px;
+            }
+            #szachy .pionki div.n6
+            {
+                top:370px;
+            }
+            #szachy .pionki div.n7
+            {
+                top:440px;
+            }
+            #szachy .pionki div.n8
+            {
+                top:510px;
+            }
+            
+        </style>
+    </head>
+    <body ng-app="myApp" ng-controller="myCtrl">
+        <div id="info">
+            <p>Obecnie ma ruch : {{(Obecnie_gra?"Czarny":"Biały")}}</p>
+            <p>Komunikat : {{komunikat}}</p>
+        </div>
+        <div id="szachy">
+            <div class="litery">
+                <div ng-repeat="item in kolumny ">{{item}}</div>
+            </div>
+            <div class="wiersz" ng-repeat="(wie, wiersz) in wiersze">
+                <div>{{wiersz}}</div>
+                <div>
+                    <div ng-repeat="(kol, item) in kolumny "  ng-click="wierszkolumna(wie, kol)"></div>
+                </div>
+                <div>{{wiersz}}</div>
+            </div>
+            <div class="litery">
+                <div ng-repeat="item in kolumny ">{{item}}</div>
+            </div>
+            <div class="pionki">
+                <div ng-class="klasa_pionek(pionek, 'czarny')" ng-click="pionekklik(pionek)"  ng-repeat="pionek in pionki.czarne"></div>
+                <div ng-class="klasa_pionek(pionek, '')" ng-click="pionekklik(pionek)" ng-repeat="pionek in pionki.biale"></div>
+            </div>
+            <div class="pionki">
+            </div>
+        </div>
+        
+        <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            $scope.pionki = {
+                                czarne : [],
+                                biale : [],
+                            }
+            $scope.Obecnie_gra = 0; // 0=> biały 1=> czarny
+            $scope.komunikat = "Wybierz pionka";
+                            
+            $scope.kolumny = ["A","B","C","D","E","F","G","H"]; //  
+            $scope.wiersze = ["1","2","3","4","5","6","7","8"]; //  
+            $scope.aktywnypionek = null;
+            
+            $scope.badanyWiersz = 0
+            $scope.badanaKolumna1 = 0
+            $scope.badanaKolumna2 = 0
+            $scope.dostepnePozycje = [];
+            
+            
+            $scope.pionekklik = function(pionek)
+            {
+                $scope.dostepnePozycje = [];
+                $scope.aktywnypionek = pionek;
+                
+                $scope.czyWybranyPionekJestOK();
+                
+                if($scope.dostepnePozycje.length == 0)
+                    $scope.aktywnypionek = null;
+                
+                console.log($scope.dostepnePozycje);
+                
+                if($scope.aktywnypionek != null)
+                    $scope.komunikat = "Wykonaj ruch";
+                else
+                    $scope.komunikat = "Wybierz pionka";
+                
+            }
+            /**
+             * 
+             * funkcja sprawdzenia jaki pionek stoi na polu x, y
+             * @return pionek
+             */
+             $scope.CzyNaPoluJestPionek = (wiersz, kolumna) =>
+             {
+                var pionekWPolu = null;
+                angular.forEach($scope.pionki, function(pionkiGracza, key){
+                    angular.forEach(pionkiGracza, function(pionek, indexPionka){
+                        if(wiersz == pionek.wiersz && kolumna == pionek.kolumna)
+                            pionekWPolu = pionek;
+                    });
+                 });
+                 
+                 console.log(pionekWPolu);
+                 return pionekWPolu;
+             }
+             /*
+              * funkcja Sprawdzenia czy jest bicie
+              */
+            $scope.sprawdzCzyJestBicie =  (wiersz, kolumna) =>
+            {
+               if(wiersz >=0 && wiersz < 8 && kolumna >=0 && kolumna < 8)
+                    {
+                      var res = $scope.CzyNaPoluJestPionek(wiersz, kolumna);
+                      return res==null;
+                    }
+                return false;    
+            }
+            /* Funkcja sprawdza czy wybrany pionek jest poprawnie wybrany 
+             * 
+             * */
+            $scope.czyWybranyPionekJestOK = function()
+            {
+                if($scope.aktywnypionek != null){
+                    
+                        if($scope.aktywnypionek.gracz != $scope.Obecnie_gra)
+                        {
+                                $scope.pionekklik(null); // pionek nie jest poprawny
+                                return;
+                        }         
+                
+                
+                        /* sprawdzamy czy pionek może wykonać ruch
+                         * czy pionka nie pprzedza nasz inny pionek
+                         *   */
+                        $scope.badanyWiersz = $scope.aktywnypionek.gracz ?
+                                    $scope.aktywnypionek.wiersz+1:$scope.aktywnypionek.wiersz-1; // badana linia
+                        
+                        var res = null; 
+                        var badanyWiersz = $scope.aktywnypionek.gracz ?
+                                    $scope.aktywnypionek.wiersz+2:$scope.aktywnypionek.wiersz-2; // badana linia dla bicia
+                        
+                        $scope.badanaKolumna1 = $scope.aktywnypionek.kolumna-1
+                        $scope.badanaKolumna2 = $scope.aktywnypionek.kolumna+1; 
+                        
+                            console.log([$scope.badanyWiersz])
+                        /* badamy ekstrema */
+                        if($scope.badanyWiersz >=0 && $scope.badanyWiersz < 8)
+                        {
+                            if( !($scope.badanaKolumna1 >=0 && $scope.badanaKolumna1 < 8))
+                                $scope.badanaKolumna1 = -1;
+                            
+                            if( !($scope.badanaKolumna2 >=0 && $scope.badanaKolumna2 < 8))
+                                $scope.badanaKolumna2 = -1;
+                            
+                            console.log([$scope.badanaKolumna1, $scope.badanaKolumna, $scope.badanyWiersz])
+                            
+                            /* sprawdzam czy kolumna 1 jest zajeta */
+                            var kol1Zajeta = true;
+                            if($scope.badanaKolumna1 > -1)
+                            {
+                                        
+                               kol1Zajeta = $scope.CzyNaPoluJestPionek(
+                                                    $scope.badanyWiersz,
+                                                    $scope.badanaKolumna1);// -1
+                            if(!kol1Zajeta)
+                                 $scope.dostepnePozycje.push([$scope.badanyWiersz, $scope.badanaKolumna1]); 
+                            else
+                              if(kol1Zajeta.gracz != $scope.aktywnypionek.gracz)
+                                {
+                                    res = $scope.sprawdzCzyJestBicie(badanyWiersz, $scope.badanaKolumna1-1)
+                                    if(res)
+                                        $scope.dostepnePozycje.push([badanyWiersz, $scope.badanaKolumna1-1]); 
+                                }
+                            }   
+                
+                            /* sprawdzam czy kolumna 2 jest zajeta */
+                            var kol2Zajeta = true;
+                            if($scope.badanaKolumna2 > -1)
+                            {
+                                        
+                               kol2Zajeta = $scope.CzyNaPoluJestPionek(
+                                                    $scope.badanyWiersz,
+                                                    $scope.badanaKolumna2 //+1  
+                                );
+                                if(!kol2Zajeta)
+                                    $scope.dostepnePozycje.push([$scope.badanyWiersz, $scope.badanaKolumna2]); 
+                                else
+                                  if(kol2Zajeta.gracz != $scope.aktywnypionek.gracz)
+                                    {
+                                        res = $scope.sprawdzCzyJestBicie(badanyWiersz, $scope.badanaKolumna2+1)
+                                    if(res)
+                                        $scope.dostepnePozycje.push([badanyWiersz, $scope.badanaKolumna2+1]); 
+                                    }
+                                }   
+                            
+                            
+                            
+                            console.log([kol1Zajeta, kol2Zajeta]);
+                
+                        }
+                                    
+                        
+                            
+                }
+            } 
+            
+            /* czy mamy ruch */
+            $scope.fweryfikacji = function(pionek)
+            {
+              var res  = []; 
+              var wiersz = pionek.wiersz - 1
+              
+                if(pionek.gracz)
+                {
+                    wiersz = pionek.wiersz + 1;
+                }
+                
+                
+                    var kolumna1 = pionek.kolumna-1;
+                    var kolumna1 = pionek.kolumna+1;
+              
+            }
+        
+            $scope.wierszkolumna = function(wiersz, kolumna)
+            {
+                var ruchOk = false;
+                angular.forEach($scope.dostepnePozycje, function(item, key){
+                   if(item[0]== wiersz && item[1]==kolumna)
+                   {
+                       console.log(parseInt((wiersz + $scope.aktywnypionek.wiersz) / 2)) 
+                       ruchOk=true;
+                   }
+                });
+                
+                if($scope.aktywnypionek != null 
+                        &&  ruchOk )
+                        
+                {
+                    var wierszPionkaBitego = ($scope.aktywnypionek.wiersz + wiersz) / 2;
+                    var kolumnaPionkaBitego = ($scope.aktywnypionek.kolumna + kolumna) / 2;
+                    var czyByloBicie = false;
+                    if (parseInt(wierszPionkaBitego)==wierszPionkaBitego && parseInt(kolumnaPionkaBitego)==kolumnaPionkaBitego)
+                    {
+                         
+
+                    angular.forEach($scope.pionki, function(pionkiGracza, key){
+                    angular.forEach(pionkiGracza, function(pionek, indexPionka){
+                        if(wierszPionkaBitego == pionek.wiersz && kolumnaPionkaBitego == pionek.kolumna)
+                            pionkiGracza.splice(indexPionka,1);
+                            czyByloBicie = true;
+
+                    });
+                    });
+                    }
+                    $scope.aktywnypionek.wiersz = wiersz;
+                    $scope.aktywnypionek.kolumna = kolumna;
+                    // weryfikacja czy mamy bicie
+                    if (czyByloBicie && $scope.sprawdzCzyPionekMaKolejneBicie(wiersz, kolumna)  )
+                    {
+
+                    } else
+                    {
+                    $scope.Obecnie_gra = $scope.Obecnie_gra?0:1;
+                    $scope.pionekklik(null);
+                    }
+                }
+            }
+            
+            extr = (x) =>  x>=0 && x<8;
+            
+            weryfikujPoleDoBicia = (wiersz, kolumna, wierszP, kolumnaP) =>
+            {
+                return  extr(wiersz +wierszP) && extr(wiersz + wierszP + wierszP) 
+                && extr(kolumna +kolumnaP) && extr(kolumna + kolumnaP + kolumnaP)
+                && $scope.CzyNaPoluJestPionek(wiersz + wierszP + wierszP, kolumna + kolumnaP + kolumnaP) == null 
+                && $scope.CzyNaPoluJestPionek(wiersz + wierszP , kolumna + kolumnaP ) != null 
+                && $scope.CzyNaPoluJestPionek(wiersz + wierszP , kolumna + kolumnaP ).gracz != $scope.aktywnypionek.gracz 
+
+            }
+
+
+           
+
+
+
+            /** czy pionek ma bicie
+            */
+
+            $scope.sprawdzCzyPionekMaKolejneBicie = (wiersz, kolumna) =>
+            {
+            
+                $scope.dostepnePozycje = []; // clean
+              var pole1 = weryfikujPoleDoBicia(wiersz, kolumna, 1,1);
+              var pole2 = weryfikujPoleDoBicia(wiersz, kolumna, -1,1);
+              var pole3 = weryfikujPoleDoBicia(wiersz, kolumna, 1,-1);
+              var pole4 = weryfikujPoleDoBicia(wiersz, kolumna, -1,-1);
+                    if (pole1) $scope.dostepnePozycje.push([wiersz+2, kolumna+2]) ;
+                    if (pole2) $scope.dostepnePozycje.push([wiersz-2, kolumna+2]) ;
+                    if (pole3) $scope.dostepnePozycje.push([wiersz+2, kolumna-2]) ;
+                    if (pole4) $scope.dostepnePozycje.push([wiersz-2, kolumna-2]) ;
+              return (pole1 || pole2 || pole3 || pole4);
+
+            }
+            
+            //pionek czarny a n3
+            $scope.klasa_pionek = function(obj, kolor)
+            {
+                var klasa = "pionek " + kolor+ " " + $scope.kolumny[obj.kolumna] + " n" + (obj.wiersz+1);
+                
+                return  klasa;
+            }
+            
+  
+            for(i=0; i<4; i++)
+            {
+                var pionek = {
+                    kolumna: (i * 2)+1,
+                    gracz: 0,
+                    wiersz:6
+                }
+                $scope.pionki.biale.push(pionek);
+                var pionek = {
+                    kolumna: (i * 2)+1,
+                    gracz: 1,
+                    wiersz:0
+                }
+                $scope.pionki.czarne.push(pionek);
+                
+                var pionek = {
+                    kolumna: (i * 2),
+                    gracz: 0,
+                    wiersz:7
+                }
+                $scope.pionki.biale.push(pionek);
+                var pionek = {
+                    kolumna: (i * 2),
+                    gracz: 1,
+                    wiersz:1
+                }
+                $scope.pionki.czarne.push(pionek);
+            }
+        
+            
+        });
+        </script>
+        
+    </body>
+</html>
